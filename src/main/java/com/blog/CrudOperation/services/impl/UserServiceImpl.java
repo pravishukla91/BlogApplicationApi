@@ -7,10 +7,12 @@ import com.blog.CrudOperation.repositories.UserRepo;
 import com.blog.CrudOperation.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
