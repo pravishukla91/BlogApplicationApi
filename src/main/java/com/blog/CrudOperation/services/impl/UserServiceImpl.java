@@ -1,27 +1,85 @@
 package com.blog.CrudOperation.services.impl;
 
+import com.blog.CrudOperation.exceptions.ResourceNotFoundException;
 import com.blog.CrudOperation.entities.User;
 import com.blog.CrudOperation.payloads.UserDto;
+import com.blog.CrudOperation.repositories.UserRepo;
 import com.blog.CrudOperation.services.UserService;
-
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public interface UserServiceImpl extends UserService {
 
-    @Override
-    public UserDto createUser(UserDto user);
+public class UserServiceImpl implements UserService {
 
-    @Override
-    public UserDto updateUser(UserDto user, Integer userId);
+    @Autowired
+    private UserRepo userRepo;
 
-    @Override
-    public UserDto getUserbyId(Integer userId);
-
-    @Override
-    public List<UserDto> getAllUsers();
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
-    void deleteUser(Integer userId);
+    public UserDto createUser(UserDto userDto) {
+        User user = this.dtotoUser(userDto);
+        User savedUser = this.userRepo.save(user);
+        return this.userToDto(savedUser);
+    }
+
+    @Override
+    public UserDto updateUser(UserDto userDto, Integer userId) {
+        // Find the user by ID or throw an exception if not found
+        User user = this.userRepo.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+
+        user.setName(userDto.getName());
+        user.setEmail(userDto.getEmail());
+        user.setAbout(userDto.getAbout());
+        user.setPassword(userDto.getPassword());
 
 
+        User updatedUser = this.userRepo.save(user);
+        return this.userToDto(updatedUser);
+    }
+
+    @Override
+    public UserDto getUserbyId(Integer userId) {
+        // Find the user by ID or throw an exception if not found
+        User user = this.userRepo.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+
+        // Convert the user entity to DTO and return it
+        return this.userToDto(user);
+    }
+
+    @Override
+    public List<UserDto> getAllUsers() {
+        // Retrieve all users from the repository
+        List<User> users = this.userRepo.findAll();
+
+        // Convert the list of users to a list of DTOs and return it
+        return users.stream()
+                .map(this::userToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteUser(Integer userId) {
+        // Find the user by ID or throw an exception if not found
+        User user = this.userRepo.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+
+        // Delete the user
+        this.userRepo.delete(user);
+    }
+
+    public User dtotoUser(UserDto userDto) {
+        User user = this.modelMapper.map(userDto, User.class);
+        return user;
+    }
+
+    public UserDto userToDto(User user) {
+        UserDto userDto = this.modelMapper.map(user, UserDto.class);
+        return userDto;
+    }
 }

@@ -7,12 +7,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+public class CategoryDto {
 
-public class UserDto {
+    private Integer categoryId;
+    private String categoryTitle;
+    private String categoryDescription;
 
-    private int id;
-    private String name;
-    private String email;
-    private String password;
-    private String about;
 }
