@@ -1,11 +1,17 @@
 package com.blog.CrudOperation.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 
 @Entity
 @Table(name = "posts")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Post {
 
     @Id
@@ -23,10 +29,10 @@ public class Post {
     private Date addedDate;
 
     @ManyToOne
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @ManyToOne
     private User user;
-
 
 }
