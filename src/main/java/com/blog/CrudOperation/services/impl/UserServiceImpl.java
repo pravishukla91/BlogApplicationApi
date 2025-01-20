@@ -1,7 +1,7 @@
 package com.blog.CrudOperation.services.impl;
 
-import com.blog.CrudOperation.exceptions.ResourceNotFoundException;
 import com.blog.CrudOperation.entities.User;
+import com.blog.CrudOperation.exceptions.ResourceNotFoundExceptions;
 import com.blog.CrudOperation.payloads.UserDto;
 import com.blog.CrudOperation.repositories.UserRepo;
 import com.blog.CrudOperation.services.UserService;
@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(UserDto userDto, Integer userId) {
         // Find the user by ID or throw an exception if not found
         User user = this.userRepo.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+                .orElseThrow(() ->new ResourceNotFoundExceptions("User", "id", userId));
 
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserbyId(Integer userId) {
         // Find the user by ID or throw an exception if not found
         User user = this.userRepo.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+                .orElseThrow(() ->new ResourceNotFoundExceptions("User", "id", userId));
 
         // Convert the user entity to DTO and return it
         return this.userToDto(user);
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Integer userId) {
         // Find the user by ID or throw an exception if not found
         User user = this.userRepo.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+                .orElseThrow(() ->new ResourceNotFoundExceptions("User", "id", userId));
 
         // Delete the user
         this.userRepo.delete(user);

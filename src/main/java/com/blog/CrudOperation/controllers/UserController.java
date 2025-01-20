@@ -1,6 +1,5 @@
 package com.blog.CrudOperation.controllers;
 
-import com.blog.CrudOperation.entities.User;
 import com.blog.CrudOperation.payloads.UserDto;
 import com.blog.CrudOperation.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,40 +17,36 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    //Post create-user
+    // POST: Create User
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto){
-
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
         UserDto createUserDto = this.userService.createUser(userDto);
         return new ResponseEntity<>(createUserDto, HttpStatus.CREATED);
-
     }
 
+    // PUT: Update User
     @PutMapping("/{userId}")
-    public ResponseEntity<UserDto> updateUser(@RequestBody.UserDto userDto, @PathVariable("userId") Integer uid) {
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto, @PathVariable("userId") Integer uid) {
         UserDto updatedUser = this.userService.updateUser(userDto, uid);
         return ResponseEntity.ok(updatedUser);
     }
 
-    @DeleteMapping("/{userId")
-    public ResponseEntity<> deleteUser(@PathVariable("userId") Integer uid){
+    // DELETE: Delete User
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Map<String, String>> deleteUser(@PathVariable("userId") Integer uid) {
         this.userService.deleteUser(uid);
-        return new  ResponseEntity(Map.of("message","User deleted successfully"), HttpStatus.OK);
+        return new ResponseEntity<>(Map.of("message", "User deleted successfully"), HttpStatus.OK);
     }
+
+    // GET: Get All Users
     @GetMapping("/")
-    public ResponseEntity<List<UserDto>> getAllUsers(){
+    public ResponseEntity<List<UserDto>> getAllUsers() {
         return ResponseEntity.ok(this.userService.getAllUsers());
     }
 
+    // GET: Get User by ID
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Integer userId){
+    public ResponseEntity<UserDto> getUserById(@PathVariable Integer userId) {
         return ResponseEntity.ok(this.userService.getUserbyId(userId));
     }
-
-
-
-
-
-
-
 }
