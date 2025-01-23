@@ -33,7 +33,7 @@ public class AuthController {
         userDto.setEmail(registerUserDto.getEmail());
         userDto.setPassword(registerUserDto.getPassword());
 
-        // Call the service to save the user (you can modify the UserService accordingly)
+
         userDto = userService.createUser(userDto);
         return new ResponseEntity<>(userDto, HttpStatus.CREATED);
     }
