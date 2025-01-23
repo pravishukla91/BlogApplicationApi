@@ -12,13 +12,11 @@ import org.springframework.stereotype.Service;
 @Configuration
 public class MyConfig {
 
-    // Define a PasswordEncoder bean
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // Define an AuthenticationManager bean
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();

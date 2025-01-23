@@ -31,16 +31,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestHeader = request.getHeader("Authorization");
-        logger.info(" Header :  {}", requestHeader);
+        logger.info("Header: {}", requestHeader);
+
+        // Allow unauthenticated access to login and register endpoints
+        String requestURI = request.getRequestURI();
+        if (requestURI.equals("/api/auth/register") || requestURI.equals("/api/auth/login")) {
+            filterChain.doFilter(request, response); // Proceed without authentication
+            return;
+        }
+
         String username = null;
         String token = null;
-        if (requestHeader != null && requestHeader.startsWith("Bearer")) {
-            //looking good
+        if (requestHeader != null && requestHeader.startsWith("Bearer ")) {
             token = requestHeader.substring(7);
             try {
-
                 username = this.JwtUtil.getUsernameFromToken(token);
-
             } catch (IllegalArgumentException e) {
                 logger.info("Illegal Argument while fetching the username !!");
                 e.printStackTrace();
@@ -48,13 +53,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 logger.info("Given jwt token is expired !!");
                 e.printStackTrace();
             } catch (MalformedJwtException e) {
-                logger.info("Some changed has done in token !! Invalid Token");
+                logger.info("Some changes have been made in token !! Invalid Token");
                 e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
-
             }
-
 
         } else {
             logger.info("Invalid Header Value !! ");

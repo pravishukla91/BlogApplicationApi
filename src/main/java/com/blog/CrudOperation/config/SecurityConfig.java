@@ -23,10 +23,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.csrf(csrf -> csrf.disable())
-                .cors(cors-> cors.disable())
-                .authorizeHttpRequests(auth->auth.requestMatchers("/homes/**").authenticated().requestMatchers("/auth/login").permitAll().anyRequest().authenticated())
-        .exceptionHandling(ex->ex.authenticationEntryPoint(point))
-                .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .cors(cors -> cors.disable())  // You can enable CORS here if needed
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth/register").permitAll()
+                        .requestMatchers("/api/auth/login").permitAll()// Allow access to login and register without authentication
+                        .anyRequest().authenticated())  // Require authentication for other endpoints
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

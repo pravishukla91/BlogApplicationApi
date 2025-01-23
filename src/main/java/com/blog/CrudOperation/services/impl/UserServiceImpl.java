@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(UserDto userDto, Integer userId) {
-        // Find the user by ID or throw an exception if not found
+
         User user = this.userRepo.findById(userId)
                 .orElseThrow(() ->new ResourceNotFoundExceptions("User", "id", userId));
 
